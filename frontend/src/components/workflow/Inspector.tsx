@@ -6,6 +6,7 @@ interface InspectorProps {
   selectedNodeId: string | null;
   onChangeWorkflowName: (name: string) => void;
   onChangeNodeLabel: (id: string, label: string) => void;
+  onChangeNodeData: (id: string, data: any) => void;
   onChangeNextNode: (fromId: string, toId: string | null) => void;
 }
 
@@ -14,6 +15,7 @@ export const Inspector: React.FC<InspectorProps> = ({
   selectedNodeId,
   onChangeWorkflowName,
   onChangeNodeLabel,
+  onChangeNodeData,
   onChangeNextNode,
 }) => {
   const selectedNode: WorkflowNode | undefined = workflow.nodes.find(
@@ -40,6 +42,8 @@ export const Inspector: React.FC<InspectorProps> = ({
     const value = e.target.value;
     onChangeNextNode(selectedNode.id, value === "" ? null : value);
   };
+
+
 
   return (
     <aside className="inspector">
@@ -85,6 +89,87 @@ export const Inspector: React.FC<InspectorProps> = ({
                 {selectedNode.kind.toUpperCase()}
               </div>
             </div>
+
+            {/* Specific Data Fields */}
+            {selectedNode.kind === "timer" && (
+              <>
+                <label className="inspector-field">
+                  <span className="inspector-label">Interval</span>
+                  <input
+                    className="inspector-input"
+                    value={(selectedNode.data as any)?.interval || ""}
+                    onChange={(e) => onChangeNodeData(selectedNode.id, { ...selectedNode.data, interval: e.target.value })}
+                  />
+                </label>
+                <label className="inspector-field">
+                  <span className="inspector-label">Unit</span>
+                  <select
+                    className="inspector-input"
+                    value={(selectedNode.data as any)?.unit || "m"}
+                    onChange={(e) => onChangeNodeData(selectedNode.id, { ...selectedNode.data, unit: e.target.value })}
+                  >
+                    <option value="m">Minutes</option>
+                    <option value="h">Hours</option>
+                  </select>
+                </label>
+              </>
+            )}
+
+            {selectedNode.kind === "condition" && (
+              <label className="inspector-field">
+                <span className="inspector-label">Expression</span>
+                <input
+                  className="inspector-input"
+                  value={(selectedNode.data as any)?.expression || ""}
+                  onChange={(e) => onChangeNodeData(selectedNode.id, { ...selectedNode.data, expression: e.target.value })}
+                />
+              </label>
+            )}
+
+            {selectedNode.kind === "order" && (
+              <>
+                <label className="inspector-field">
+                  <span className="inspector-label">Asset</span>
+                  <input
+                    className="inspector-input"
+                    value={(selectedNode.data as any)?.asset || ""}
+                    onChange={(e) => onChangeNodeData(selectedNode.id, { ...selectedNode.data, asset: e.target.value })}
+                  />
+                </label>
+                <label className="inspector-field">
+                  <span className="inspector-label">Action</span>
+                  <select
+                    className="inspector-input"
+                    value={(selectedNode.data as any)?.action || "buy"}
+                    onChange={(e) => onChangeNodeData(selectedNode.id, { ...selectedNode.data, action: e.target.value })}
+                  >
+                    <option value="buy">Buy</option>
+                    <option value="sell">Sell</option>
+                  </select>
+                </label>
+                <label className="inspector-field">
+                  <span className="inspector-label">Amount</span>
+                  <input
+                    type="number"
+                    className="inspector-input"
+                    value={(selectedNode.data as any)?.amount || 0}
+                    onChange={(e) => onChangeNodeData(selectedNode.id, { ...selectedNode.data, amount: Number(e.target.value) })}
+                  />
+                </label>
+              </>
+            )}
+
+            {selectedNode.kind === "output" && (
+              <label className="inspector-field">
+                <span className="inspector-label">Message</span>
+                <input
+                  className="inspector-input"
+                  value={(selectedNode.data as any)?.message || ""}
+                  onChange={(e) => onChangeNodeData(selectedNode.id, { ...selectedNode.data, message: e.target.value })}
+                />
+              </label>
+            )}
+
             <label className="inspector-field">
               <span className="inspector-label">Next Node</span>
               <select

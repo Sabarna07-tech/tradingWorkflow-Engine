@@ -1,15 +1,38 @@
-export type NodeKind = "timer" | "condition" | "order" | "output";
+export type WorkflowNodeKind = "timer" | "condition" | "order" | "output";
 
-export interface Position {
-  x: number;
-  y: number;
+export interface TimerNodeData {
+  interval: string;
+  unit: "m" | "h";
 }
+
+export interface ConditionNodeData {
+  expression: string;
+}
+
+export interface OrderNodeData {
+  asset: string;
+  action: "buy" | "sell";
+  amount: number;
+}
+
+export interface OutputNodeData {
+  message: string;
+}
+
+export type NodeData =
+  | TimerNodeData
+  | ConditionNodeData
+  | OrderNodeData
+  | OutputNodeData
+  | {};
 
 export interface WorkflowNode {
   id: string;
-  kind: NodeKind;
+  kind: WorkflowNodeKind;
   label: string;
-  position: Position;
+  x: number;
+  y: number;
+  data?: NodeData;
 }
 
 export interface WorkflowEdge {

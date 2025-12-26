@@ -65,8 +65,8 @@ export const GraphCanvas = ({
 
     dragInfoRef.current = {
       nodeId: node.id,
-      offsetX: pointerXInCanvas - node.position.x,
-      offsetY: pointerYInCanvas - node.position.y,
+      offsetX: pointerXInCanvas - node.x,
+      offsetY: pointerYInCanvas - node.y,
     };
 
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
@@ -209,10 +209,10 @@ export const GraphCanvas = ({
             const to = nodeById[edge.to];
             if (!from || !to) return null;
 
-            const fromX = from.position.x + NODE_WIDTH;
-            const fromY = from.position.y + NODE_HEIGHT / 2;
-            const toX = to.position.x;
-            const toY = to.position.y + NODE_HEIGHT / 2;
+            const fromX = from.x + NODE_WIDTH;
+            const fromY = from.y + NODE_HEIGHT / 2;
+            const toX = to.x;
+            const toY = to.y + NODE_HEIGHT / 2;
 
             const cp1x = fromX + 40;
             const cp1y = fromY;
@@ -238,8 +238,8 @@ export const GraphCanvas = ({
                 isSelected ? "graph-node--selected" : "",
               ].join(" ")}
               style={{
-                left: node.position.x,
-                top: node.position.y,
+                left: node.x,
+                top: node.y,
                 width: NODE_WIDTH,
                 height: NODE_HEIGHT,
               }}
@@ -251,12 +251,29 @@ export const GraphCanvas = ({
                 {node.kind === "timer"
                   ? "TIMER"
                   : node.kind === "condition"
-                  ? "CONDITION"
-                  : node.kind === "order"
-                  ? "ORDER"
-                  : "OUTPUT"}
+                    ? "CONDITION"
+                    : node.kind === "order"
+                      ? "ORDER"
+                      : "OUTPUT"}
               </div>
               <div className="graph-node-label">{node.label}</div>
+
+              {/* Specific Node Details */}
+              <div className="graph-node-details" style={{ fontSize: "11px", opacity: 0.8, marginTop: "4px" }}>
+                {node.kind === "timer" && node.data && (
+                  <div>Interval: {(node.data as any).interval}{(node.data as any).unit}</div>
+                )}
+                {node.kind === "condition" && node.data && (
+                  <div>Expr: {(node.data as any).expression}</div>
+                )}
+                {node.kind === "order" && node.data && (
+                  <div>{(node.data as any).action?.toUpperCase()} {(node.data as any).amount} {(node.data as any).asset}</div>
+                )}
+                {node.kind === "output" && node.data && (
+                  <div>Msg: {(node.data as any).message}</div>
+                )}
+              </div>
+
               <div className="graph-node-id">{node.id}</div>
             </button>
           );

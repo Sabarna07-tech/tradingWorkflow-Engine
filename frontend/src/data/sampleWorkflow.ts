@@ -7,30 +7,16 @@ export const exampleWorkflow: Workflow = {
   description:
     "Simple workflow that buys a fixed amount of SOL every 5 minutes on a paper exchange.",
   nodes: [
-    {
-      id: "timer-1",
-      kind: "timer",
-      label: "Every 5 minutes",
-      position: { x: 260, y: 260 },
-    },
+    { id: "timer-1", kind: "timer", label: "Every 5 minutes", x: 220, y: 260 },
     {
       id: "condition-1",
       kind: "condition",
       label: "If market open",
-      position: { x: 560, y: 260 },
+      x: 520,
+      y: 260,
     },
-    {
-      id: "order-1",
-      kind: "order",
-      label: "Buy $10 SOL",
-      position: { x: 860, y: 260 },
-    },
-    {
-      id: "log-1",
-      kind: "output",
-      label: "Log fill",
-      position: { x: 1160, y: 260 },
-    },
+    { id: "order-1", kind: "order", label: "Buy $10 SOL", x: 820, y: 260 },
+    { id: "log-1", kind: "output", label: "Log fill", x: 1120, y: 260 },
   ],
   edges: [
     { id: "edge-1", from: "timer-1", to: "condition-1" },

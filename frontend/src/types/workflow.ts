@@ -7,11 +7,39 @@ export interface Position {
   y: number;
 }
 
+export interface TimerNodeData {
+  interval: string; // e.g. "5"
+  unit: "m" | "h";
+}
+
+export interface ConditionNodeData {
+  expression: string; // e.g. "price > 100"
+}
+
+export interface OrderNodeData {
+  asset: string; // e.g. "SOL"
+  action: "buy" | "sell";
+  amount: number;
+}
+
+export interface OutputNodeData {
+  message: string;
+}
+
+export type NodeData =
+  | TimerNodeData
+  | ConditionNodeData
+  | OrderNodeData
+  | OutputNodeData
+  | {};
+
 export interface WorkflowNode {
   id: string;
   kind: NodeKind;
   label: string;
-  position: Position;
+  x: number;
+  y: number;
+  data?: NodeData;
 }
 
 export interface WorkflowEdge {
